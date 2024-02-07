@@ -140,3 +140,20 @@ body {
 .winning-message.show {
     display: flex;
 }
+
+h1 {
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+
+}
+
+#players {
+    margin: 2rem;
+    display: flex;    
+    font-size: 1.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+

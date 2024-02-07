@@ -109,13 +109,69 @@ const winningCombinations = [
 const winningMessageTextElement = document.querySelector('[data-winning-message-text]');
 const winningMessageElement = document.getElementById('winningMessage');
 const restartBtn = document.getElementById('restartButton');
+const players = document.getElementById('players');
+const labelX = document.createElement('label')
+const labelO = document.createElement('label')
+const playerX = document.createElement('input');
+const playerO = document.createElement('input');
+const playerXscore = document.createElement('p');
+const playerOscore = document.createElement('p');
+players.appendChild(playerXscore);
+players.appendChild(playerOscore);
 let oTurn
+let Xscore = 0;
+let Oscore = 0;
 
-startGame()
+function createPlayers() {
+
+    playerX.value = '';
+    playerO.value = '';
+    const iform = document.createElement('form');
+
+    labelX.textContent = 'Name of Player 1: ';
+    labelX.classList.add('labelx');
+    labelO.textContent = 'Name of Player 2: ';
+    labelO.classList.add('labelo');
+    
+    playerX.setAttribute('type', 'text');
+    playerX.setAttribute('name', 'PlayerXName');
+    playerX.setAttribute('placeholder', 'Name of Player1');
+    playerX.classList.add('playerx');
+
+    
+    playerO.setAttribute('type', 'text');
+    playerO.setAttribute('name', 'PlayerOName');
+    playerO.setAttribute('placeholder', 'Name of Player2');
+    playerO.classList.add('playero');
+
+    const start = document.createElement('input');
+    start.setAttribute('type', 'button');
+    start.setAttribute('value', 'Start');
+    start.classList.add('start');
+
+    start.addEventListener('click', startGame);
+    start.addEventListener('click', gameScores);
+
+    iform.appendChild(labelX);
+    iform.appendChild(playerX);
+    iform.appendChild(labelO);
+    iform.appendChild(playerO);
+    iform.appendChild(start);
+
+    players.appendChild(iform);
+
+
+}
+
+createPlayers()
+
 
 restartBtn.addEventListener('click', startGame);
 
+
+
 function startGame() {
+
     circleTurn = false;
     cellElements.forEach(cell => {
         cell.classList.remove(X_CLASS);
@@ -143,12 +199,49 @@ function handleClick(e) {
 }
 
 function endGame(draw) {
+    
     if (draw) {
         winningMessageTextElement.innerText = 'Draw!'
-    } else {
+    } else if (oTurn) {
+        winningMessageTextElement.innerText = `${playerO.value} Wins!`;
+        Oscore++;
+    } else{
+        winningMessageTextElement.innerText = `${playerX.value} Wins!`;
+        Xscore++;
+    } 
+    
+    /* else {
         winningMessageTextElement.innerText = `${oTurn ? "O's" : "X's"} Wins!`;
-    }
+    } */
     winningMessageElement.classList.add('show');
+    gameScores();
+    overallWinner()
+
+}
+function gameScores() {
+    
+
+    playerXscore.textContent = `${playerX.value}'s score is ${Xscore}`;
+    playerOscore.textContent = `${playerO.value}'s score is ${Oscore}`;
+
+    players.innerText = `${playerXscore.textContent}, ${playerOscore.textContent}`;
+
+}
+
+function overallWinner() {
+    if (Oscore === 3) {
+        winningMessageTextElement.innerText = `Game Over!, ${playerOscore.textContent}  and Has Won!`;
+        Oscore = 0;
+        Xscore = 0;
+        players.innerHTML = '';
+        createPlayers();
+    } else if (Xscore === 3) {
+        winningMessageTextElement.innerText = `Game Over!, ${playerXscore.textContent} and Has Won!`;
+        Oscore = 0;
+        Xscore = 0;
+        players.innerHTML = '';
+        createPlayers();
+    }
 }
 
 function isDraw() {
